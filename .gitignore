@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+venv/
+.env
+*.o
+*.out
+build/
+compile_commands.json
+*.pdf
+*.log
+.cache/
