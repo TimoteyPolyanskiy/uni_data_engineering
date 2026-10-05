@@ -1,8 +1,9 @@
-.venv/
-.env
-.python-version
-__pycache__/
-*.ipynb_checkpoints/
-data/raw/*
+# Raw data isolation
+data/raw/*/*
 !data/raw/README.md
-*.zip
+
+# Virtualenv & caches
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
