@@ -38,3 +38,30 @@
 ├── pyproject.toml           # Маніфест залежностей uv
 ├── uv.lock                  # Зафіксовані точні версії середовища
 └── README.md
+## Лабораторна робота №2: PostgreSQL Data Pipeline (S08)
+
+### Інфраструктура та підключення
+- **СУБД:** PostgreSQL 16-alpine у контейнері `cityflow_postgres_s08`.
+- **Конфігурація:** параметри підключення винесено у `.env` (шаблон надано в `.env.example`).
+- **Схеми:** `stg` (сирий вхід), `core` (реляційний шар), `audit` (журнал запусків і карантин).
+
+### Інструкція з відтворення
+```fish
+# 1. Запуск контейнера СУБД
+docker compose up -d
+
+# 2. Застосування DDL-структури
+docker compose exec -T postgres psql -U cityflow_user -d cityflow_s08 < sql/lab02/01_ddl.sql
+
+# 3. Виконання конвеєра імпорту та публікації
+uv run python -m src.lab02.pipeline
+
+# 4. Виконання контрольних SQL-перевірок цілісності
+docker compose exec -T postgres psql -U cityflow_user -d cityflow_s08 < sql/lab02/02_checks.sql
+
+# 5. Запуск автотестів надійності та ідемпотентності
+uv run pytest tests/lab02/test_pipeline.py -v
+
+# 6. Компіляція підсумкового звіту
+uv run python scripts/lab02/generate_report.py
+typst compile docs/lab02/report_lab_02.typ docs/lab02/report_lab_02.pdf
